@@ -1,11 +1,13 @@
 import cv2
 import numpy as np
 from scipy.linalg import sqrtm
+
 #Vectorize
 def vectorize(img):
     w,h=img.shape
     tmp=img.reshape(w*h)
     return tmp
+
 #load image
 def load_img(filepath,N_class,N_image):
     X=[]
@@ -22,6 +24,7 @@ def load_img(filepath,N_class,N_image):
             X_tmp=vectorize(gray)
             X.append(X_tmp)
     return np.transpose(X)
+
 # Compute eigenvectors
 def cal_eigenvector(X,N_image,N_class,K):
     ## Calculate Between-class scatter
@@ -47,6 +50,7 @@ def cal_eigenvector(X,N_image,N_class,K):
     V,U=np.linalg.eig(DW)
     W=np.dot(np.transpose(U),np.transpose(Z))
     return np.transpose(W)
+
 #Project to p-dimensional subspace
 def project_to_subspace(W,X):
     mean_total=np.mean(X,axis=1)
@@ -54,6 +58,7 @@ def project_to_subspace(W,X):
     for i in range(np.shape(X)[1]):
         Y[:,i]=np.dot(np.transpose(W),(X[:,i]-mean_total))
     return Y
+
 #Classify
 def classify(Y_train,Y_test):
     k,n=np.shape(Y_test)
@@ -66,6 +71,7 @@ def classify(Y_train,Y_test):
             tmp[j]=np.linalg.norm(y_train-y)
         result[i]=int(np.argmin(tmp))
     return result
+
 # Compute Accuracy
 def cal_accuracy(X,N_image):
     correct=0
@@ -77,6 +83,7 @@ def cal_accuracy(X,N_image):
         else:
             wrong+=1
     return float(correct)/(float(correct)+float(wrong))
+
 #load images
 filepath_train='ECE661_2016_hw11_DB1/train/'
 filepath_test='ECE661_2016_hw11_DB1/test/'
